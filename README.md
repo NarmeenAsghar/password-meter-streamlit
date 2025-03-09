@@ -31,7 +31,7 @@ Make sure you have **Python 3.7+** installed on your machine. 🖥️
 1. Clone or download the repository to your local machine. 📥
 
    ```bash
-   git clone https://github.com/your-username/password-strength-meter.git
+   git clone https://github.com/NarmeenAsghar/password-meter-streamlit.git
    ```
 
 2. Navigate to the project directory. 📂
