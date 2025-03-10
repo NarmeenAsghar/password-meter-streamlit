@@ -1,28 +1,34 @@
-# Import necessary libraries
 import streamlit as st
-import zxcvbn  # For password strength evaluation
+import re
 
-# Function to evaluate password strength using zxcvbn
+# Function to evaluate password strength
 def evaluate_password_strength(password):
-    # Use zxcvbn to evaluate the password
-    result = zxcvbn.zxcvbn(password)
+    # Check password length
+    length_score = len(password) >= 12
     
-    # Extract score and feedback
-    score = result['score']
-    feedback = result['feedback']['suggestions']
+    # Check for the presence of different character types
+    has_upper = re.search(r'[A-Z]', password) is not None
+    has_lower = re.search(r'[a-z]', password) is not None
+    has_digit = re.search(r'[0-9]', password) is not None
+    has_special = re.search(r'[^A-Za-z0-9]', password) is not None
     
-    # Map score to strength levels
-    if score == 0:
-        strength = "Very Weak"
-    elif score == 1:
-        strength = "Weak"
-    elif score == 2:
-        strength = "Fair"
-    elif score == 3:
-        strength = "Strong"
-    else:
+    # Evaluate strength based on conditions
+    if length_score and has_upper and has_lower and has_digit and has_special:
         strength = "Very Strong"
-
+        feedback = []
+    elif length_score and has_upper and has_lower and has_digit:
+        strength = "Strong"
+        feedback = ["Add a special character for extra security."]
+    elif length_score and (has_upper or has_lower) and has_digit:
+        strength = "Fair"
+        feedback = ["Consider using more diverse characters like special symbols."]
+    elif length_score or (has_upper and has_lower):
+        strength = "Weak"
+        feedback = ["Password is too simple. Try adding more variety."]
+    else:
+        strength = "Very Weak"
+        feedback = ["Password is too short or too simple. Please add more characters and variety."]
+    
     return strength, feedback
 
 # Streamlit App Interface
@@ -71,4 +77,3 @@ with st.container():
     - **Avoid**: Using common words or phrases that are easy to guess. 🚫
     - **Use a password manager**: To store and generate strong passwords securely. 🔒
     """)
-
