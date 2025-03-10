@@ -1,28 +1,30 @@
+# imports
+# re module checks the character cases like uppercase, lowercase, digits etc
 import streamlit as st
 import re
 
-# Function to evaluate password strength
-def evaluate_password_strength(password):
-    # Check password length
-    length_score = len(password) >= 12
+# function for cases
+def password_strength(password):
+# password length according to your choice
+    length = len(password) >= 12
     
-    # Check for the presence of different character types
+# Checking for different characters
     has_upper = re.search(r'[A-Z]', password) is not None
     has_lower = re.search(r'[a-z]', password) is not None
     has_digit = re.search(r'[0-9]', password) is not None
     has_special = re.search(r'[^A-Za-z0-9]', password) is not None
     
-    # Evaluate strength based on conditions
-    if length_score and has_upper and has_lower and has_digit and has_special:
+# Conditions
+    if length and has_upper and has_lower and has_digit and has_special:
         strength = "Very Strong"
         feedback = []
-    elif length_score and has_upper and has_lower and has_digit:
+    elif length and has_upper and has_lower and has_digit:
         strength = "Strong"
         feedback = ["Add a special character for extra security."]
-    elif length_score and (has_upper or has_lower) and has_digit:
+    elif length and (has_upper or has_lower) and has_digit:
         strength = "Fair"
         feedback = ["Consider using more diverse characters like special symbols."]
-    elif length_score or (has_upper and has_lower):
+    elif length or (has_upper and has_lower):
         strength = "Weak"
         feedback = ["Password is too simple. Try adding more variety."]
     else:
@@ -31,24 +33,24 @@ def evaluate_password_strength(password):
     
     return strength, feedback
 
-# Streamlit App Interface
+# Title
 st.title("Password Strength Meter 🔐")
 st.markdown("## Check your password strength and improve security! 🛡️")
 
-# Create an input field for the password
+# Input field for the password
 password = st.text_input("Enter your password:", type='password')
 
-# Container for the requirements and feedback that will appear below
+# Container for the feedback
 with st.container():
-    # If a password is entered, evaluate and show strength
+
     if password:
-        # Call the function to evaluate the password strength
-        strength, feedback = evaluate_password_strength(password)
+# Calling function
+        strength, feedback = password_strength(password)
         
-        # Display password strength
+# Display password strength
         st.write(f"### Password strength: **{strength}**")
         
-        # If password strength is not strong, show feedback suggestions
+# If password strength is not strong, show feedback suggestions
         if strength != "Very Strong":
             st.write("### Suggestions to improve your password: 💡")
             for suggestion in feedback:
@@ -56,7 +58,7 @@ with st.container():
         else:
             st.write("Your password is very strong! 🎉 No further changes are needed.")
         
-        # Show visual feedback using colored text (optional)
+# Show visual feedback
         if strength == "Very Weak":
             st.markdown('<span style="color:red">🚨 Very Weak Password! Please improve it immediately! 🚨</span>', unsafe_allow_html=True)
         elif strength == "Weak":
@@ -68,7 +70,7 @@ with st.container():
         else:
             st.markdown('<span style="color:blue">🎉 Very Strong Password! Keep it up! 🎉</span>', unsafe_allow_html=True)
     
-    # Optionally, add some extra help/information at the bottom
+# Bottom tips
     st.markdown("---")
     st.markdown("### Tips to make your password stronger 💪")
     st.markdown(""" 
